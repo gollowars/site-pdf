@@ -14,7 +14,7 @@ let phantomPDF = new PhantomPDF({
   cookie: {
     'name': 'ACTIVE_CARE_KEY_VISITED_COUNT_03',
     'value': '100',
-    'domain': 'localhost',
+    'domain': 'stackoverflow.com',
     'path'     : '/',
     'expires'  : (new Date()).getTime() + (1000 * 60 * 60)
   },
