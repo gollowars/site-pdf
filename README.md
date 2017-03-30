@@ -1,18 +1,18 @@
-# phantomPDF
+# site-pdf
 
-phantomPDF is pdf generator from webpage to depend on phantom-node
+site-pdf is pdf generator from webpage to depend on phantom-node
 
 ## required
 phantomjs
 
 ## install
 ```
-npm install phantomPDF
+npm install site-pdf
 ```
 
 ## example
 ```
-let phantomPDF = new PhantomPDF({
+let sitePDF = new SitePDF({
   cookie: {
     'name': 'COOKIE_KEY_NAME',
     'value': '100',
@@ -20,7 +20,7 @@ let phantomPDF = new PhantomPDF({
     'path'     : '/',
     'expires'  : (new Date()).getTime() + (1000 * 60 * 60)
   },
-  userAgent: "phantomPDF",
+  userAgent: "sitePDF",
   // viewportSize: {width: 1280, height: 800},
   paperSize: {
     format: "A4",
@@ -33,7 +33,7 @@ let phantomPDF = new PhantomPDF({
     }]
 })
 
-await phantomPDF.create('http://stackoverflow.com/','output.pdf')
+await sitePDF.create('http://stackoverflow.com/','output.pdf')
 
-phantomPDF.destroy()
+sitePDF.destroy()
 ```

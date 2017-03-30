@@ -20,11 +20,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var debug = require('debug')('phantompdf');
 
-var PhantomPDF = function () {
-  function PhantomPDF() {
+var SitePDF = function () {
+  function SitePDF() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-    _classCallCheck(this, PhantomPDF);
+    _classCallCheck(this, SitePDF);
 
     this.options = options;
     this.pool = null;
@@ -32,7 +32,7 @@ var PhantomPDF = function () {
     this.init();
   }
 
-  _createClass(PhantomPDF, [{
+  _createClass(SitePDF, [{
     key: 'init',
     value: function init() {
       var phantomArgs = [];
@@ -212,7 +212,7 @@ var PhantomPDF = function () {
     }
   }]);
 
-  return PhantomPDF;
+  return SitePDF;
 }();
 
-module.exports = PhantomPDF;
+module.exports = SitePDF;

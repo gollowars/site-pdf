@@ -3,7 +3,7 @@ import phantom from 'phantom'
 import createPhantomPool from 'phantom-pool'
 let debug = require('debug')('phantompdf')
 
-class PhantomPDF {
+class SitePDF {
   constructor(options = {}){
     this.options = options
     this.pool = null
@@ -88,4 +88,4 @@ class PhantomPDF {
   }
 }
 
-module.exports = PhantomPDF
+module.exports = SitePDF
