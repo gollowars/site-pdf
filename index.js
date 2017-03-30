@@ -158,22 +158,28 @@ var SitePDF = function () {
 
                             case 31:
                               _context.next = 33;
-                              return page.open(url);
+                              return page.on("onResourceRequested", function (requestData) {
+                                debug('Requesting', requestData.url);
+                              });
 
                             case 33:
+                              _context.next = 35;
+                              return page.open(url);
+
+                            case 35:
                               status = _context.sent;
-                              _context.next = 36;
+                              _context.next = 38;
                               return page.property('content');
 
-                            case 36:
+                            case 38:
                               content = _context.sent;
-                              _context.next = 39;
+                              _context.next = 41;
                               return page.render(output);
 
-                            case 39:
+                            case 41:
                               return _context.abrupt('return', status);
 
-                            case 40:
+                            case 42:
                             case 'end':
                               return _context.stop();
                           }

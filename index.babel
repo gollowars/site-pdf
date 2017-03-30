@@ -67,9 +67,9 @@ class SitePDF {
           // page.settings.userAgent = options.userAgent
         }
         
-        // await page.on("onResourceRequested", function(requestData) {
-        //   debug('Requesting', requestData.url)
-        // })
+        await page.on("onResourceRequested", function(requestData) {
+          debug('Requesting', requestData.url)
+        })
 
         const status = await page.open(url)
         const content = await page.property('content')
