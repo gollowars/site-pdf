@@ -12,7 +12,7 @@ npm install phantomPDF
 ```
 let phantomPDF = new PhantomPDF({
   cookie: {
-    'name': 'ACTIVE_CARE_KEY_VISITED_COUNT_03',
+    'name': 'COOKIE_KEY_NAME',
     'value': '100',
     'domain': 'stackoverflow.com',
     'path'     : '/',
