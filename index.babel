@@ -1,0 +1,75 @@
+import 'babel-polyfill'
+import phantom from 'phantom'
+import createPhantomPool from 'phantom-pool'
+let debug = require('debug')('phantompdf')
+
+class PhantomPDF {
+  constructor(options = {}){
+    this.options = options
+    this.pool = null
+
+    this.init()
+  }
+
+  init(){
+    this.pool = createPhantomPool({
+      max: 10, // default
+      min: 2, // default
+      // how long a resource can stay idle in pool before being removed
+      idleTimeoutMillis: 30000, // default.
+      // maximum number of times an individual resource can be reused before being destroyed; set to 0 to disable
+      maxUses: 50, // default
+      // function to validate an instance prior to use; see https://github.com/coopernurse/node-pool#createpool
+      validator: () => Promise.resolve(true), // defaults to always resolving true
+      // validate resource before borrowing; required for `maxUses and `validator`
+      testOnBorrow: true, // default
+      // For all opts, see opts at https://github.com/coopernurse/node-pool#createpool
+      phantomArgs: [['--ignore-ssl-errors=true', '--disk-cache=true'], {
+        logLevel: 'info',
+      }], // arguments passed to phantomjs-node directly, default is `[]`. For all opts, see https://github.com/amir20/phantomjs-node#phantom-object-api
+    })
+  }
+
+  create(url,output){
+    let options = this.options
+    let pool = this.pool
+    return new Promise(async function(resolve,reject){
+      pool.use(async (instance) => {
+        const page = await instance.createPage()
+
+        if(options.cookie != undefined){
+          await page.addCookie(options.cookie)
+          let cookies = await page.property('cookies');
+          debug('cookies:',cookies)
+        }
+
+  
+        if(options.userAgent != undefined){
+          await page.setting('userAgent',options.userAgent)
+          let value = await page.setting('userAgent')
+          debug('agent :',value)
+          // page.settings.userAgent = options.userAgent
+        }
+        
+        // await page.on("onResourceRequested", function(requestData) {
+        //   debug('Requesting', requestData.url)
+        // })
+
+        const status = await page.open(url)
+        const content = await page.property('content')
+        await page.render(output)
+        // await instance.exit()
+        return status
+      }).then((status) => {
+        resolve(status)
+      })      
+    })
+    
+  }
+
+  destroy(){
+    this.pool.drain().then(() => this.pool.clear())
+  }
+}
+
+module.exports = PhantomPDF
