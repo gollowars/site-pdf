@@ -35,6 +35,10 @@ var PhantomPDF = function () {
   _createClass(PhantomPDF, [{
     key: 'init',
     value: function init() {
+      var phantomArgs = [];
+      if (this.options.phantomArgs != undefined) {
+        phantomArgs = this.options.phantomArgs;
+      }
       this.pool = (0, _phantomPool2.default)({
         max: 10, // default
         min: 2, // default
@@ -49,9 +53,7 @@ var PhantomPDF = function () {
         // validate resource before borrowing; required for `maxUses and `validator`
         testOnBorrow: true, // default
         // For all opts, see opts at https://github.com/coopernurse/node-pool#createpool
-        phantomArgs: [['--ignore-ssl-errors=true', '--disk-cache=true'], {
-          logLevel: 'info'
-        }] });
+        phantomArgs: phantomArgs });
     }
   }, {
     key: 'create',

@@ -2,6 +2,8 @@
 
 phantomPDF is pdf generator from webpage to depend on phantom-node
 
+## required
+phantomjs
 
 ## install
 ```
@@ -24,7 +26,11 @@ let phantomPDF = new PhantomPDF({
     format: "A4",
     orientation: "portrait",
     margin: {left:"0.5cm", right:"0.5cm", top:"0.5cm", bottom:"0.5cm"}
-  }
+  },
+  phantomArgs:[['--ignore-ssl-errors=true', '--disk-cache=true'], {
+      // phantomPath: '/usr/local/bin/phantomjs',
+      logLevel: 'info',
+    }]
 })
 
 await phantomPDF.create('http://stackoverflow.com/','output.pdf')
