@@ -10,7 +10,19 @@ phantomjs
 npm install site-pdf
 ```
 
-## example
+## easy to use
+```
+let SitePDF = require('site-pdf')
+let generator = new SitePDF()
+
+generator.create('https://www.google.co.jp/','output.pdf')
+.then(function(){
+  generator.destroy()
+})
+
+```
+
+## use with options
 ```
 let sitePDF = new SitePDF({
   cookie: {
