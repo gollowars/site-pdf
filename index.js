@@ -68,7 +68,8 @@ var PhantomPDF = function () {
                 case 0:
                   pool.use(function () {
                     var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(instance) {
-                      var page, cookies, value, status, content;
+                      var page, cookies, value, _value, _value2, status, content;
+
                       return regeneratorRuntime.wrap(function _callee$(_context) {
                         while (1) {
                           switch (_context.prev = _context.next) {
@@ -116,23 +117,61 @@ var PhantomPDF = function () {
                               // page.settings.userAgent = options.userAgent
 
                             case 17:
-                              _context.next = 19;
-                              return page.open(url);
+                              if (!(options.viewportSize != undefined)) {
+                                _context.next = 24;
+                                break;
+                              }
 
-                            case 19:
-                              status = _context.sent;
+                              _context.next = 20;
+                              return page.property('viewportSize', options.viewportSize);
+
+                            case 20:
                               _context.next = 22;
-                              return page.property('content');
+                              return page.property('viewportSize');
 
                             case 22:
+                              _value = _context.sent;
+
+                              debug('viewportSize :', _value);
+                              // page.settings.userAgent = options.userAgent
+
+                            case 24:
+                              if (!(options.paperSize != undefined)) {
+                                _context.next = 31;
+                                break;
+                              }
+
+                              _context.next = 27;
+                              return page.property('paperSize', options.paperSize);
+
+                            case 27:
+                              _context.next = 29;
+                              return page.property('paperSize');
+
+                            case 29:
+                              _value2 = _context.sent;
+
+                              debug('paperSize :', _value2);
+                              // page.settings.userAgent = options.userAgent
+
+                            case 31:
+                              _context.next = 33;
+                              return page.open(url);
+
+                            case 33:
+                              status = _context.sent;
+                              _context.next = 36;
+                              return page.property('content');
+
+                            case 36:
                               content = _context.sent;
-                              _context.next = 25;
+                              _context.next = 39;
                               return page.render(output);
 
-                            case 25:
+                            case 39:
                               return _context.abrupt('return', status);
 
-                            case 26:
+                            case 40:
                             case 'end':
                               return _context.stop();
                           }
