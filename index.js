@@ -20,6 +20,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var debug = require('debug')('phantompdf');
 
+function waitRender(page, output, wait) {
+  new Promise(function (resolve, reject) {
+    setTimeout(function () {
+      resolve(page.render(output));
+    }, wait);
+  });
+}
+
 var SitePDF = function () {
   function SitePDF() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -173,13 +181,27 @@ var SitePDF = function () {
 
                             case 38:
                               content = _context.sent;
-                              _context.next = 41;
-                              return page.render(output);
 
-                            case 41:
-                              return _context.abrupt('return', status);
+                              if (!_this.options.wait) {
+                                _context.next = 44;
+                                break;
+                              }
+
+                              _context.next = 42;
+                              return waitRender(page, output, _this.options.wait);
 
                             case 42:
+                              _context.next = 46;
+                              break;
+
+                            case 44:
+                              _context.next = 46;
+                              return page.render(output);
+
+                            case 46:
+                              return _context.abrupt('return', status);
+
+                            case 47:
                             case 'end':
                               return _context.stop();
                           }

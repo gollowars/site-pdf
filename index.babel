@@ -3,6 +3,14 @@ import phantom from 'phantom'
 import createPhantomPool from 'phantom-pool'
 let debug = require('debug')('phantompdf')
 
+function waitRender(page,output,wait){
+  new Promise(function(resolve, reject){
+    setTimeout(function(){
+      resolve(page.render(output))
+    },wait)
+  })
+}
+
 class SitePDF {
   constructor(options = {}){
     this.options = options
@@ -73,7 +81,12 @@ class SitePDF {
 
         const status = await page.open(url)
         const content = await page.property('content')
-        await page.render(output)
+        if(this.options.wait){
+          await waitRender(page,output,this.options.wait)
+        }else{
+          await page.render(output)
+        }
+        
         // await instance.exit()
         return status
       }).then((status) => {
