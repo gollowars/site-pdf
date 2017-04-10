@@ -14,17 +14,35 @@ var _phantomPool2 = _interopRequireDefault(_phantomPool);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 var debug = require('debug')('phantompdf');
 
 function waitRender(page, output, wait) {
   new Promise(function (resolve, reject) {
-    setTimeout(function () {
-      resolve(page.render(output));
-    }, wait);
+    setTimeout(_asyncToGenerator(regeneratorRuntime.mark(function _callee() {
+      var result;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return page.render(output);
+
+            case 2:
+              result = _context.sent;
+
+              resolve(result);
+
+            case 4:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, _callee, this);
+    })), wait);
   });
 }
 
@@ -69,148 +87,148 @@ var SitePDF = function () {
       var options = this.options;
       var pool = this.pool;
       return new Promise(function () {
-        var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(resolve, reject) {
+        var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(resolve, reject) {
           var _this = this;
 
-          return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          return regeneratorRuntime.wrap(function _callee3$(_context3) {
             while (1) {
-              switch (_context2.prev = _context2.next) {
+              switch (_context3.prev = _context3.next) {
                 case 0:
                   pool.use(function () {
-                    var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(instance) {
+                    var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(instance) {
                       var page, cookies, value, _value, _value2, status, content;
 
-                      return regeneratorRuntime.wrap(function _callee$(_context) {
+                      return regeneratorRuntime.wrap(function _callee2$(_context2) {
                         while (1) {
-                          switch (_context.prev = _context.next) {
+                          switch (_context2.prev = _context2.next) {
                             case 0:
-                              _context.next = 2;
+                              _context2.next = 2;
                               return instance.createPage();
 
                             case 2:
-                              page = _context.sent;
+                              page = _context2.sent;
 
                               if (!(options.cookie != undefined)) {
-                                _context.next = 10;
+                                _context2.next = 10;
                                 break;
                               }
 
-                              _context.next = 6;
+                              _context2.next = 6;
                               return page.addCookie(options.cookie);
 
                             case 6:
-                              _context.next = 8;
+                              _context2.next = 8;
                               return page.property('cookies');
 
                             case 8:
-                              cookies = _context.sent;
+                              cookies = _context2.sent;
 
                               debug('cookies:', cookies);
 
                             case 10:
                               if (!(options.userAgent != undefined)) {
-                                _context.next = 17;
+                                _context2.next = 17;
                                 break;
                               }
 
-                              _context.next = 13;
+                              _context2.next = 13;
                               return page.setting('userAgent', options.userAgent);
 
                             case 13:
-                              _context.next = 15;
+                              _context2.next = 15;
                               return page.setting('userAgent');
 
                             case 15:
-                              value = _context.sent;
+                              value = _context2.sent;
 
                               debug('agent :', value);
                               // page.settings.userAgent = options.userAgent
 
                             case 17:
                               if (!(options.viewportSize != undefined)) {
-                                _context.next = 24;
+                                _context2.next = 24;
                                 break;
                               }
 
-                              _context.next = 20;
+                              _context2.next = 20;
                               return page.property('viewportSize', options.viewportSize);
 
                             case 20:
-                              _context.next = 22;
+                              _context2.next = 22;
                               return page.property('viewportSize');
 
                             case 22:
-                              _value = _context.sent;
+                              _value = _context2.sent;
 
                               debug('viewportSize :', _value);
                               // page.settings.userAgent = options.userAgent
 
                             case 24:
                               if (!(options.paperSize != undefined)) {
-                                _context.next = 31;
+                                _context2.next = 31;
                                 break;
                               }
 
-                              _context.next = 27;
+                              _context2.next = 27;
                               return page.property('paperSize', options.paperSize);
 
                             case 27:
-                              _context.next = 29;
+                              _context2.next = 29;
                               return page.property('paperSize');
 
                             case 29:
-                              _value2 = _context.sent;
+                              _value2 = _context2.sent;
 
                               debug('paperSize :', _value2);
                               // page.settings.userAgent = options.userAgent
 
                             case 31:
-                              _context.next = 33;
+                              _context2.next = 33;
                               return page.on("onResourceRequested", function (requestData) {
                                 debug('Requesting', requestData.url);
                               });
 
                             case 33:
-                              _context.next = 35;
+                              _context2.next = 35;
                               return page.open(url);
 
                             case 35:
-                              status = _context.sent;
-                              _context.next = 38;
+                              status = _context2.sent;
+                              _context2.next = 38;
                               return page.property('content');
 
                             case 38:
-                              content = _context.sent;
+                              content = _context2.sent;
 
-                              if (!_this.options.wait) {
-                                _context.next = 44;
+                              if (!(options.wait != undefined)) {
+                                _context2.next = 44;
                                 break;
                               }
 
-                              _context.next = 42;
-                              return waitRender(page, output, _this.options.wait);
+                              _context2.next = 42;
+                              return waitRender(page, output, options.wait);
 
                             case 42:
-                              _context.next = 46;
+                              _context2.next = 46;
                               break;
 
                             case 44:
-                              _context.next = 46;
+                              _context2.next = 46;
                               return page.render(output);
 
                             case 46:
-                              return _context.abrupt('return', status);
+                              return _context2.abrupt('return', status);
 
                             case 47:
                             case 'end':
-                              return _context.stop();
+                              return _context2.stop();
                           }
                         }
-                      }, _callee, _this);
+                      }, _callee2, _this);
                     }));
 
                     return function (_x4) {
-                      return _ref2.apply(this, arguments);
+                      return _ref3.apply(this, arguments);
                     };
                   }()).then(function (status) {
                     resolve(status);
@@ -218,14 +236,14 @@ var SitePDF = function () {
 
                 case 1:
                 case 'end':
-                  return _context2.stop();
+                  return _context3.stop();
               }
             }
-          }, _callee2, this);
+          }, _callee3, this);
         }));
 
         return function (_x2, _x3) {
-          return _ref.apply(this, arguments);
+          return _ref2.apply(this, arguments);
         };
       }());
     }

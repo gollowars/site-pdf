@@ -5,8 +5,9 @@ let debug = require('debug')('phantompdf')
 
 function waitRender(page,output,wait){
   new Promise(function(resolve, reject){
-    setTimeout(function(){
-      resolve(page.render(output))
+    setTimeout(async function(){
+      let result = await page.render(output)
+      resolve(result)
     },wait)
   })
 }
@@ -81,8 +82,9 @@ class SitePDF {
 
         const status = await page.open(url)
         const content = await page.property('content')
-        if(this.options.wait){
-          await waitRender(page,output,this.options.wait)
+
+        if(options.wait != undefined){
+          await waitRender(page, output, options.wait)
         }else{
           await page.render(output)
         }
