@@ -3,11 +3,10 @@ import phantom from 'phantom'
 import createPhantomPool from 'phantom-pool'
 let debug = require('debug')('phantompdf')
 
-function waitRender(page,output,wait){
+function dryRender(page,output,wait){
   new Promise(function(resolve, reject){
     setTimeout(async function(){
-      let result = await page.render(output)
-      resolve(result)
+      resolve()
     },wait)
   })
 }
@@ -42,51 +41,74 @@ class SitePDF {
   }
 
   create(url,output){
+
     let options = this.options
     let pool = this.pool
-    return new Promise(async function(resolve,reject){
+    return new Promise(async function(resolve){
       pool.use(async (instance) => {
-        const page = await instance.createPage()
+        const page = await instance.createPage().catch((e) => {
+            console.log('error:',e)
+          })
 
         if(options.cookie != undefined){
-          await page.addCookie(options.cookie)
-          let cookies = await page.property('cookies');
+          await page.addCookie(options.cookie).catch((e) => {
+            console.log('error:',e)
+          })
+          let cookies = await page.property('cookies').catch((e) => {
+            console.log('error:',e)
+          })
           debug('cookies:',cookies)
         }
 
   
         if(options.userAgent != undefined){
-          await page.setting('userAgent',options.userAgent)
-          let value = await page.setting('userAgent')
+          await page.setting('userAgent',options.userAgent).catch((e) => {
+            console.log('error:',e)
+          })
+          let value = await page.setting('userAgent').catch((e) => {
+            console.log('error:',e)
+          })
           debug('agent :',value)
           // page.settings.userAgent = options.userAgent
         }
 
         if(options.viewportSize != undefined){
-          await page.property('viewportSize',options.viewportSize)
-          let value = await page.property('viewportSize')
+          await page.property('viewportSize',options.viewportSize).catch((e) => {
+            console.log('error:',e)
+          })
+          let value = await page.property('viewportSize').catch((e) => {
+            console.log('error:',e)
+          })
           debug('viewportSize :',value)
           // page.settings.userAgent = options.userAgent
         }
 
         if(options.paperSize != undefined){
-          await page.property('paperSize',options.paperSize)
-          let value = await page.property('paperSize')
+          await page.property('paperSize',options.paperSize).catch((e) => {
+            console.log('error:',e)
+          })
+          let value = await page.property('paperSize').catch((e) => {
+            console.log('error:',e)
+          })
           debug('paperSize :',value)
           // page.settings.userAgent = options.userAgent
         }
         
         await page.on("onResourceRequested", function(requestData) {
           debug('Requesting', requestData.url)
-        })
+        }).catch((e) => {
+            console.log('error:',e)
+          })
 
         const status = await page.open(url)
         const content = await page.property('content')
 
-        if(options.wait != undefined){
-          await waitRender(page, output, options.wait)
+        if(options.dry === true){
+          await dryRender(page, output, 10)
         }else{
-          await page.render(output)
+          await page.render(output).catch((e) => {
+            console.log('error:',e)
+          })
         }
         
         // await instance.exit()

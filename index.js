@@ -20,23 +20,16 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 var debug = require('debug')('phantompdf');
 
-function waitRender(page, output, wait) {
+function dryRender(page, output, wait) {
   new Promise(function (resolve, reject) {
-    setTimeout(_asyncToGenerator(regeneratorRuntime.mark(function _callee() {
-      var result;
+    setTimeout(_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              _context.next = 2;
-              return page.render(output);
+              resolve();
 
-            case 2:
-              result = _context.sent;
-
-              resolve(result);
-
-            case 4:
+            case 1:
             case 'end':
               return _context.stop();
           }
@@ -79,15 +72,17 @@ var SitePDF = function () {
         // validate resource before borrowing; required for `maxUses and `validator`
         testOnBorrow: true, // default
         // For all opts, see opts at https://github.com/coopernurse/node-pool#createpool
-        phantomArgs: phantomArgs });
+        phantomArgs: phantomArgs // arguments passed to phantomjs-node directly, default is `[]`. For all opts, see https://github.com/amir20/phantomjs-node#phantom-object-api
+      });
     }
   }, {
     key: 'create',
     value: function create(url, output) {
+
       var options = this.options;
       var pool = this.pool;
       return new Promise(function () {
-        var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(resolve, reject) {
+        var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(resolve) {
           var _this = this;
 
           return regeneratorRuntime.wrap(function _callee3$(_context3) {
@@ -95,7 +90,7 @@ var SitePDF = function () {
               switch (_context3.prev = _context3.next) {
                 case 0:
                   pool.use(function () {
-                    var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(instance) {
+                    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(instance) {
                       var page, cookies, value, _value, _value2, status, content;
 
                       return regeneratorRuntime.wrap(function _callee2$(_context2) {
@@ -103,7 +98,9 @@ var SitePDF = function () {
                           switch (_context2.prev = _context2.next) {
                             case 0:
                               _context2.next = 2;
-                              return instance.createPage();
+                              return instance.createPage().catch(function (e) {
+                                console.log('error:', e);
+                              });
 
                             case 2:
                               page = _context2.sent;
@@ -114,11 +111,15 @@ var SitePDF = function () {
                               }
 
                               _context2.next = 6;
-                              return page.addCookie(options.cookie);
+                              return page.addCookie(options.cookie).catch(function (e) {
+                                console.log('error:', e);
+                              });
 
                             case 6:
                               _context2.next = 8;
-                              return page.property('cookies');
+                              return page.property('cookies').catch(function (e) {
+                                console.log('error:', e);
+                              });
 
                             case 8:
                               cookies = _context2.sent;
@@ -132,11 +133,15 @@ var SitePDF = function () {
                               }
 
                               _context2.next = 13;
-                              return page.setting('userAgent', options.userAgent);
+                              return page.setting('userAgent', options.userAgent).catch(function (e) {
+                                console.log('error:', e);
+                              });
 
                             case 13:
                               _context2.next = 15;
-                              return page.setting('userAgent');
+                              return page.setting('userAgent').catch(function (e) {
+                                console.log('error:', e);
+                              });
 
                             case 15:
                               value = _context2.sent;
@@ -151,11 +156,15 @@ var SitePDF = function () {
                               }
 
                               _context2.next = 20;
-                              return page.property('viewportSize', options.viewportSize);
+                              return page.property('viewportSize', options.viewportSize).catch(function (e) {
+                                console.log('error:', e);
+                              });
 
                             case 20:
                               _context2.next = 22;
-                              return page.property('viewportSize');
+                              return page.property('viewportSize').catch(function (e) {
+                                console.log('error:', e);
+                              });
 
                             case 22:
                               _value = _context2.sent;
@@ -170,11 +179,15 @@ var SitePDF = function () {
                               }
 
                               _context2.next = 27;
-                              return page.property('paperSize', options.paperSize);
+                              return page.property('paperSize', options.paperSize).catch(function (e) {
+                                console.log('error:', e);
+                              });
 
                             case 27:
                               _context2.next = 29;
-                              return page.property('paperSize');
+                              return page.property('paperSize').catch(function (e) {
+                                console.log('error:', e);
+                              });
 
                             case 29:
                               _value2 = _context2.sent;
@@ -186,6 +199,8 @@ var SitePDF = function () {
                               _context2.next = 33;
                               return page.on("onResourceRequested", function (requestData) {
                                 debug('Requesting', requestData.url);
+                              }).catch(function (e) {
+                                console.log('error:', e);
                               });
 
                             case 33:
@@ -200,13 +215,13 @@ var SitePDF = function () {
                             case 38:
                               content = _context2.sent;
 
-                              if (!(options.wait != undefined)) {
+                              if (!(options.dry === true)) {
                                 _context2.next = 44;
                                 break;
                               }
 
                               _context2.next = 42;
-                              return waitRender(page, output, options.wait);
+                              return dryRender(page, output, 10);
 
                             case 42:
                               _context2.next = 46;
@@ -214,7 +229,9 @@ var SitePDF = function () {
 
                             case 44:
                               _context2.next = 46;
-                              return page.render(output);
+                              return page.render(output).catch(function (e) {
+                                console.log('error:', e);
+                              });
 
                             case 46:
                               return _context2.abrupt('return', status);
@@ -227,7 +244,7 @@ var SitePDF = function () {
                       }, _callee2, _this);
                     }));
 
-                    return function (_x4) {
+                    return function (_x3) {
                       return _ref3.apply(this, arguments);
                     };
                   }()).then(function (status) {
@@ -242,7 +259,7 @@ var SitePDF = function () {
           }, _callee3, this);
         }));
 
-        return function (_x2, _x3) {
+        return function (_x2) {
           return _ref2.apply(this, arguments);
         };
       }());
